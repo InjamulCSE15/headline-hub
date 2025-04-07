@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../providers/AuthProviders';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log("Email:", email, "Password:", password);
-    };
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { signIn } = useContext(AuthContext);
+
+    const handleLogin = async (e) => {
+        setLoading(true);
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        try {
+            const user = await signIn(email, password);
+            e.target.reset();
+            toast.success(' Login Successfully');
+            setLoading(false);
+            navigate('/'); 
+        }
+        catch (error) {
+            toast.error(error.message);
+            setLoading(false);
+        }
+    }
+
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center md:py-14">
             <div className="bg-white p-8 md:p-16 rounded-none shadow-sm w-full max-w-lg">
                 <h2 className="text-2xl font-semibold text-center mb-6">Login your account</h2>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label className="block text-gray-700 font-medium">Email address</label>
                         <div className="flex items-center border border-gray-300 rounded-sm p-4">
@@ -23,8 +40,7 @@ const Login = () => {
                                 type="email"
                                 placeholder="Enter your email address"
                                 className="flex-1 outline-none bg-transparent"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                name='email'
                                 required
                             />
                         </div>
@@ -38,18 +54,17 @@ const Login = () => {
                                 type="password"
                                 placeholder="Enter your password"
                                 className="flex-1 outline-none bg-transparent"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                name='password'
                                 required
                             />
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-gray-800 text-white py-2 rounded-sm btn-lg hover:bg-gray-900 transition"
-                    >
-                        Login
+                    <button type="submit" className="w-full bg-gray-800 text-white py-2 rounded-sm btn-lg hover:bg-gray-900 transition" >
+                    {
+                        loading ? <span className="loading loading-spinner text-white"></span> 
+                        : <span> Login</span>
+                    }                        
                     </button>
                 </form>
                 <p className="text-center text-gray-600 mt-4">

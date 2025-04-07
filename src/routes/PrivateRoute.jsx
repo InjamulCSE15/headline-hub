@@ -9,10 +9,7 @@ export const PrivateRoute = ({ children }) => {
         <div className='grid col-12 align-middle h-screen place-items-center'>
             <span className="loading loading-bars loading-xl"></span>
         </div>
-
-        )
-        
-
+        )       
     }
     if(user){
        return children; 

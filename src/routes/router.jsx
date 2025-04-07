@@ -28,12 +28,6 @@ const router = createBrowserRouter ([
                         return []; // ✅ Return an empty array if there's an error
                     }
                 },
-                // loader: async({params})=> {
-                //     axios.get(`https://openapi.programming-hero.com/api/news/category/${params.id}`)
-                //     .then(res =>  res.data.data )
-                //     .catch(err => console.log(err))
-                //     return params
-                // }
             },
         ]
     },
