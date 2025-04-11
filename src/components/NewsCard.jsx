@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaRegEye, FaStar, FaShareAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const NewsCard = ({ news }) => {
     const [loading, setLoading] = useState(true);
@@ -41,9 +42,9 @@ const NewsCard = ({ news }) => {
                         className="w-full h-full object-cover rounded-lg mt-3"
                     />
                     <p className="text-gray-600 mt-3">{news.details.slice(0, 150)}...</p>
-                    <a href="#" className="text-orange-600 font-semibold mt-2 inline-block">
+                    <Link to={`/news/${news._id}`} className="text-blue-600 font-semibold mt-2 inline-block hover:underline">
                         Read More
-                    </a>
+                    </Link>
                     <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-1 text-orange-500">
                             <FaStar />
