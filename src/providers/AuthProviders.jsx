@@ -23,10 +23,9 @@ const AuthProviders = ({ children }) => {
                 });
             });
     };
-
     
     const signIn = (email, password) => {
-        setLoading(true);
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -34,7 +33,6 @@ const AuthProviders = ({ children }) => {
             return user;
         });
     };
-
 
     const signOutUser = () => {
         setLoading(true);
