@@ -6,6 +6,8 @@ import AuthLayout from "../layouts/AuthLayout"
 import Login from "../layouts/pages/Login"
 import Register from "../layouts/pages/Register"
 import NewsDetails from "../layouts/pages/NewsDetails"
+import toast from "react-hot-toast"
+import { PrivateRoute } from "./PrivateRoute"
 
 const router = createBrowserRouter ([
     {
@@ -21,11 +23,10 @@ const router = createBrowserRouter ([
                 element: <CategoryNews/>,
                 loader: async ({ params }) => {
                     try {
-                        const response = await axios.get(`https://openapi.programming-hero.com/api/news/category/${params.id}`);
-                        console.log("API Response:", response.data); // Debugging: check the full response
+                        const response = await axios.get(`https://openapi.programming-hero.com/api/news/category/${params.id}`);                        
                         return response.data.data; // ✅ Ensure you return `data`, not just `id`
-                    } catch (error) {
-                        console.error(error);
+                    } catch (err) {
+                        console.error(err);
                         return []; // ✅ Return an empty array if there's an error
                     }
                 },
@@ -34,7 +35,19 @@ const router = createBrowserRouter ([
     },
     {
         path: "/news/:id",
-        element: <NewsDetails/>
+        element: <PrivateRoute> <NewsDetails/></PrivateRoute>,
+        loader: async ({ params }) => {
+            try {
+                const response = await axios.get(`https://openapi.programming-hero.com/api/news/${params.id}`);
+                console.log("API Response:", response.data); // Debugging: check the full response
+                return response.data.data; // ✅ Ensure you return `data`, not just `id`
+            } catch (err) {
+                toast.error(err.message);
+                console.error(err);
+                return []; // ✅ Return an empty array if there's an error
+            }
+        }
+        
     },
     {
         path: "auth",

@@ -1,30 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProviders';
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    const [loading, setLoading] = useState(false);
+    const { signIn, loading } = useContext(AuthContext);
     const navigate = useNavigate();
-    const { signIn } = useContext(AuthContext);
-
+    const location = useLocation();
     const handleLogin = async (e) => {
-        setLoading(true);
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         try {
             const user = await signIn(email, password);
             e.target.reset();
-            toast.success(' Login Successfully');
-            setLoading(false);
-            navigate('/'); 
-        }
-        catch (error) {
-            toast.error(error.message);
-            setLoading(false);
-        }
+            navigate(location?.state ? location.state :'/');
+        } catch (err) {
+            toast.error(err.message);
+        }        
     }
 
     return (

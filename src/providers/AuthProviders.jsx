@@ -1,6 +1,8 @@
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react';
 import { app } from '../firebase/firebase.config';
+import toast from 'react-hot-toast';
+import { Navigate } from 'react-router-dom';
 
 export const AuthContext = createContext(null);
 
@@ -27,11 +29,17 @@ const AuthProviders = ({ children }) => {
     const signIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+    .then((userCredential) => {
+            setLoading(false);
             const user = userCredential.user;
+            toast.success(' Login Successfully');
             setUser(user); // Ensure the user state updates immediately
             return user;
-        });
+        })
+        .catch((err) => {
+            setLoading(false);
+            throw err; 
+        });        
     };
 
     const signOutUser = () => {
@@ -49,13 +57,8 @@ const AuthProviders = ({ children }) => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-            if (currentUser) {
-                localStorage.setItem('user', JSON.stringify(currentUser));
-            } else {
-                localStorage.removeItem('user');
-            }
+            currentUser ? localStorage.setItem('user', JSON.stringify(currentUser)) : localStorage.removeItem('user');
         });
-
         return () => unSubscribe();
     }, []);
 

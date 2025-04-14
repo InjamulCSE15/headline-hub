@@ -17,7 +17,7 @@ const Navbar = () => {
 
     return (
         <div className="flex items-center justify-between">
-            <h6 className="font-bold text-xl"> {user && user.displayName} </h6>
+            <h6 className="font-bold text-xl"> {user && user?.displayName} </h6>
             <nav>
                 <ul className="flex items-center gap-4 space-x-4">
                     <li><Link>Home</Link></li>
